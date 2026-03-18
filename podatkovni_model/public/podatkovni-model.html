@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="sl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudySprint - Podatkovni Model (član 2)</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="hero">
+        <p class="badge">StudySprint • član 2</p>
+        <h1>Podatkovni model in sinhronizacija podatkov</h1>
+        <p>
+          StudySprint je progresivna spletna aplikacija za organizacijo učenja,
+          upravljanje učnih ciljev, izvedbo study sprintov, spremljanje napredka
+          ter skupinsko sodelovanje.
+        </p>
+      </header>
+
+      <section class="section">
+        <h2>Glavne entitete in atributi</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>User</h3>
+            <p>id, firstName, lastName, email, passwordHash, role, createdAt, lastSyncAt</p>
+          </article>
+          <article class="card">
+            <h3>Subject</h3>
+            <p>id, name, description, color, userId</p>
+          </article>
+          <article class="card">
+            <h3>Goal</h3>
+            <p>id, title, description, deadline, priority, status, createdAt, userId, subjectId</p>
+          </article>
+          <article class="card">
+            <h3>Task</h3>
+            <p>id, title, description, deadline, status, estimatedMinutes, order, goalId</p>
+          </article>
+          <article class="card">
+            <h3>StudySprint</h3>
+            <p>id, startTime, endTime, durationMinutes, status, notes, userId, taskId</p>
+          </article>
+          <article class="card">
+            <h3>Progress</h3>
+            <p>id, date, completedTasks, sprintCount, totalStudyMinutes, completionPercentage, userId</p>
+          </article>
+          <article class="card">
+            <h3>Reminder</h3>
+            <p>id, type, scheduledFor, status, channel, userId, goalId?, taskId?</p>
+          </article>
+          <article class="card">
+            <h3>Group</h3>
+            <p>id, name, description, createdAt, createdByUserId</p>
+          </article>
+          <article class="card">
+            <h3>GroupMembership</h3>
+            <p>id, userId, groupId, role, joinedAt</p>
+          </article>
+          <article class="card">
+            <h3>GroupChallenge</h3>
+            <p>id, title, description, startDate, endDate, targetValue, status, groupId</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Relacije</h2>
+        <ul class="relations">
+          <li>User 1:N Subject</li>
+          <li>User 1:N Goal</li>
+          <li>Subject 1:N Goal</li>
+          <li>Goal 1:N Task</li>
+          <li>Task 1:N StudySprint</li>
+          <li>User 1:N StudySprint</li>
+          <li>User 1:N Progress</li>
+          <li>User 1:N Reminder</li>
+          <li>User N:M Group preko GroupMembership</li>
+          <li>Group 1:N GroupChallenge</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>Sinhronizacija podatkov med odjemalcem in strežnikom</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Kje je podatek</th>
+              <th>Kaj vsebuje</th>
+              <th>Zakaj</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Vedno na napravi</td>
+              <td>Aktivne naloge, lokalni vrstni red nalog, trenutno stanje sprinta, zadnji ogledani podatki.</td>
+              <td>Delovanje aplikacije tudi offline in hiter odziv uporabniškega vmesnika.</td>
+            </tr>
+            <tr>
+              <td>Samo na strežniku</td>
+              <td>Hesla (hash), sistemski audit zapisi, centralna konsolidacija skupinskih statistik.</td>
+              <td>Varnost, integriteta in enoten vir resnice.</td>
+            </tr>
+            <tr>
+              <td>Sinhronizirano</td>
+              <td>Subjects, Goals, Tasks, StudySprints, Progress, Reminders, Groups, GroupMemberships, GroupChallenges.</td>
+              <td>Usklajeno stanje med več napravami in sodelovanje v skupini.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="sync-note">
+          Sinhronizacija se izvaja ob prijavi, periodično (npr. na 60 sekund), ob ponovni
+          povezavi v omrežje in ročno preko endpointa <code>POST /api/sync</code>.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>ER diagram</h2>
+        <p>Diagram je serviran lokalno iz projekta in ne uporablja zunanjih povezav.</p>
+        <img src="/ER/mermaid-diagram.png" alt="ER diagram StudySprint podatkovnega modela" class="diagram" />
+      </section>
+    </main>
+  </body>
+</html>

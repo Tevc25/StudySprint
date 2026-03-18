@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" role="img" aria-labelledby="title desc">
+  <title id="title">StudySprint ER diagram</title>
+  <desc id="desc">ER diagram for StudySprint member 2 data model.</desc>
+  <defs>
+    <style>
+      .box { fill: #ffffff; stroke: #2f3b52; stroke-width: 2; rx: 10; }
+      .title { font: 700 16px 'Segoe UI', sans-serif; fill: #1f2a3d; }
+      .txt { font: 12px 'Segoe UI', sans-serif; fill: #44516a; }
+      .line { stroke: #4d648f; stroke-width: 2; marker-end: url(#arrow); }
+      .hint { font: 12px 'Segoe UI', sans-serif; fill: #2d5bff; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#4d648f" />
+    </marker>
+  </defs>
+
+  <rect class="box" x="40" y="40" width="220" height="130" />
+  <text class="title" x="55" y="65">User</text>
+  <text class="txt" x="55" y="90">id, firstName, lastName</text>
+  <text class="txt" x="55" y="108">email, role, createdAt</text>
+  <text class="txt" x="55" y="126">lastSyncAt</text>
+
+  <rect class="box" x="320" y="40" width="220" height="120" />
+  <text class="title" x="335" y="65">Subject</text>
+  <text class="txt" x="335" y="90">id, name, description</text>
+  <text class="txt" x="335" y="108">color, userId</text>
+
+  <rect class="box" x="600" y="40" width="240" height="140" />
+  <text class="title" x="615" y="65">Goal</text>
+  <text class="txt" x="615" y="90">id, title, deadline</text>
+  <text class="txt" x="615" y="108">priority, status, createdAt</text>
+  <text class="txt" x="615" y="126">userId, subjectId</text>
+
+  <rect class="box" x="900" y="40" width="240" height="130" />
+  <text class="title" x="915" y="65">Task</text>
+  <text class="txt" x="915" y="90">id, title, deadline</text>
+  <text class="txt" x="915" y="108">status, estimatedMinutes</text>
+  <text class="txt" x="915" y="126">order, goalId</text>
+
+  <rect class="box" x="900" y="240" width="240" height="130" />
+  <text class="title" x="915" y="265">StudySprint</text>
+  <text class="txt" x="915" y="290">id, startTime, endTime</text>
+  <text class="txt" x="915" y="308">durationMinutes, status</text>
+  <text class="txt" x="915" y="326">notes, userId, taskId</text>
+
+  <rect class="box" x="40" y="240" width="240" height="120" />
+  <text class="title" x="55" y="265">Progress</text>
+  <text class="txt" x="55" y="290">id, date, completedTasks</text>
+  <text class="txt" x="55" y="308">sprintCount, totalStudyMinutes</text>
+  <text class="txt" x="55" y="326">completionPercentage, userId</text>
+
+  <rect class="box" x="320" y="240" width="240" height="120" />
+  <text class="title" x="335" y="265">Reminder</text>
+  <text class="txt" x="335" y="290">id, type, scheduledFor</text>
+  <text class="txt" x="335" y="308">status, channel, userId</text>
+  <text class="txt" x="335" y="326">goalId?, taskId?</text>
+
+  <rect class="box" x="40" y="450" width="240" height="120" />
+  <text class="title" x="55" y="475">Group</text>
+  <text class="txt" x="55" y="500">id, name, description</text>
+  <text class="txt" x="55" y="518">createdAt, createdByUserId</text>
+
+  <rect class="box" x="320" y="450" width="250" height="120" />
+  <text class="title" x="335" y="475">GroupMembership</text>
+  <text class="txt" x="335" y="500">id, userId, groupId</text>
+  <text class="txt" x="335" y="518">role, joinedAt</text>
+
+  <rect class="box" x="620" y="450" width="260" height="120" />
+  <text class="title" x="635" y="475">GroupChallenge</text>
+  <text class="txt" x="635" y="500">id, title, description</text>
+  <text class="txt" x="635" y="518">startDate, endDate, targetValue</text>
+  <text class="txt" x="635" y="536">status, groupId</text>
+
+  <line class="line" x1="260" y1="90" x2="320" y2="90" />
+  <text class="hint" x="280" y="80">1:N</text>
+
+  <line class="line" x1="540" y1="95" x2="600" y2="95" />
+  <text class="hint" x="560" y="85">1:N</text>
+
+  <line class="line" x1="840" y1="100" x2="900" y2="100" />
+  <text class="hint" x="860" y="90">1:N</text>
+
+  <line class="line" x1="1020" y1="170" x2="1020" y2="240" />
+  <text class="hint" x="1030" y="210">1:N</text>
+
+  <line class="line" x1="150" y1="170" x2="150" y2="240" />
+  <text class="hint" x="160" y="210">1:N</text>
+
+  <line class="line" x1="150" y1="170" x2="360" y2="240" />
+  <text class="hint" x="230" y="210">1:N</text>
+
+  <line class="line" x1="260" y1="510" x2="320" y2="510" />
+  <text class="hint" x="280" y="500">1:N</text>
+
+  <line class="line" x1="570" y1="510" x2="620" y2="510" />
+  <text class="hint" x="585" y="500">1:N</text>
+
+  <line class="line" x1="150" y1="170" x2="150" y2="450" />
+  <text class="hint" x="160" y="330">N:M prek membership</text>
+</svg>
