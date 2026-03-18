@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StudySprint - Funkcionalnosti odjemalca (Član 1)</title>
+  <link rel="stylesheet" href="/assets/funkcionalnosti-odjemalca.css" />
+</head>
+<body>
+  <header>
+    <p class="badge">StudySprint • član 1</p>
+    <h1>StudySprint - Funkcionalnosti odjemalca</h1>
+    <p class="meta">Član 1 - idejna zasnova PWA</p>
+  </header>
+
+  <main>
+    <section class="section">
+      <h2>Funkcionalnosti odjemalca</h2>
+      <p>
+        Odjemalski del StudySprint je namenjen organizaciji učenja, spremljanju napredka in sodelovanju
+        v učnih skupinah. Sistem podpira tri vloge: uporabnik, član učne skupine in moderator skupine.
+      </p>
+
+      <h3>1. Pregled rokov in obveznosti</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> enoten pregled prihajajočih nalog in rokov.</li>
+        <li><strong>Vhodi:</strong> cilji, naloge, roki in prioritete.</li>
+        <li><strong>Izhodi:</strong> časovni ali seznamski prikaz obveznosti.</li>
+      </ul>
+
+      <h3>2. Ustvarjanje učnega cilja</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> definiranje učnega cilja (npr. izpit, projekt, sklop snovi).</li>
+        <li><strong>Vhodi:</strong> naziv, opis, predmet/področje, predvideni rok.</li>
+        <li><strong>Izhodi:</strong> shranjen cilj med aktivnimi cilji uporabnika.</li>
+      </ul>
+
+      <h3>3. Dodajanje nalog</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> razčlenitev ciljev na konkretne korake.</li>
+        <li><strong>Vhodi:</strong> naziv naloge, opis, povezava do cilja, prioriteta, status.</li>
+        <li><strong>Izhodi:</strong> nova naloga v seznamu opravil.</li>
+      </ul>
+
+      <h3>4. Nastavitev roka</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> natančno časovno planiranje nalog in ciljev.</li>
+        <li><strong>Vhodi:</strong> cilj/naloga, datum in ura.</li>
+        <li><strong>Izhodi:</strong> zabeležen rok v pregledu obveznosti.</li>
+      </ul>
+
+      <h3>5. Spremljanje osebnega napredka</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> spremljanje doseganja ciljev in opravljenosti nalog.</li>
+        <li><strong>Vhodi:</strong> statusi nalog, aktivni/zaključeni cilji, aktivnost.</li>
+        <li><strong>Izhodi:</strong> prikaz napredka (seznam, odstotek, grafični prikaz).</li>
+      </ul>
+
+      <h3>6. Pošiljanje opomnikov in opozoril</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> obveščanje o rokih in pomembnih dogodkih.</li>
+        <li><strong>Vhodi:</strong> roki, pravila obveščanja, statusi nalog/ciljev.</li>
+        <li><strong>Izhodi:</strong> obvestila v aplikaciji (opomniki in opozorila).</li>
+      </ul>
+
+      <h3>7. Pridružitev k skupini</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> vstop v eno ali več učnih skupin.</li>
+        <li><strong>Vhodi:</strong> koda skupine, povabilo ali izbira skupine.</li>
+        <li><strong>Izhodi:</strong> članstvo in dostop do skupinskih funkcij.</li>
+      </ul>
+
+      <h3>8. Sodelovanje v skupnem izzivu</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> skupinsko doseganje učnih ciljev in večjo motivacijo.</li>
+        <li><strong>Vhodi:</strong> izbran izziv, potrditev sodelovanja, aktivnost člana.</li>
+        <li><strong>Izhodi:</strong> evidenca sodelovanja in skupni napredek.</li>
+      </ul>
+
+      <h3>9. Ustvarjanje skupinskega izziva</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> pripravo ciljno usmerjene skupinske aktivnosti.</li>
+        <li><strong>Vhodi:</strong> naziv, opis, trajanje, pogoji, merila uspeha.</li>
+        <li><strong>Izhodi:</strong> pripravljen skupinski izziv.</li>
+      </ul>
+
+      <h3>10. Zagon skupinskega izziva</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> aktivacijo predhodno ustvarjenega izziva.</li>
+        <li><strong>Vhodi:</strong> izziv, datum začetka, pogoji izvajanja.</li>
+        <li><strong>Izhodi:</strong> aktiven izziv za člane skupine.</li>
+      </ul>
+
+      <h3>11. Upravljanje skupine</h3>
+      <ul>
+        <li><strong>Omogoča:</strong> upravljanje članov, pravil in skupinskih aktivnosti.</li>
+        <li><strong>Vhodi:</strong> podatki skupine, člani, nastavitve, izzivi.</li>
+        <li><strong>Izhodi:</strong> posodobljeno stanje skupine.</li>
+      </ul>
+    </section>
+
+    <section class="section section-diagram">
+      <h2>UML diagram primerov uporabe (odjemalec)</h2>
+      <p>
+        Diagram prikazuje primere uporabe ter relacije med vlogami in funkcionalnostmi.
+      </p>
+      <img src="/assets/uml-odjemalec.png" alt="UML diagram primerov uporabe za odjemalski del StudySprint" />
+    </section>
+
+    <section class="section">
+      <h2>Vloge uporabnikov</h2>
+      <h3>Uporabnik</h3>
+      <p>
+        Osnovna vloga. Uporabnik ustvarja cilje in naloge, določa roke ter spremlja napredek.
+      </p>
+
+      <h3>Član učne skupine</h3>
+      <p>
+        Razširjena vloga uporabnika z možnostjo sodelovanja v skupini in skupinskih izzivih.
+      </p>
+
+      <h3>Moderator skupine</h3>
+      <p>
+        Napredna vloga člana skupine, ki ustvarja in zaganja izzive ter upravlja skupino.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Povzetek</h2>
+      <p>
+        StudySprint odjemalec na enem mestu združuje planiranje, spremljanje napredka in skupinsko
+        motivacijo. Rešitev podpira individualno učenje in učinkovito skupinsko sodelovanje.
+      </p>
+    </section>
+
+    <footer>
+      Route: /funkcionalnosti-odjemalca/
+    </footer>
+  </main>
+</body>
+</html>

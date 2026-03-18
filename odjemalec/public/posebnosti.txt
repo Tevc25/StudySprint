@@ -1,0 +1,26 @@
+StudySprint - tehnične posebnosti implementacije (odjemalec)
+
+1) Tehnološki sklad
+- Odjemalec: HTML5, CSS3, TypeScript.
+- Delovanje: PWA (Service Worker, Web App Manifest, HTTPS).
+- Namen: hitro lokalno delo + sinhronizacija s strežnikom.
+
+2) Podatki (usklajeno s podatkovnim modelom)
+- Ključne entitete: User, Subject, Goal, Task, StudySprint, Progress, Reminder, Group,
+  GroupMembership, GroupChallenge.
+- Lokalno na napravi: aktivni cilji, naloge, roki, zadnji napredek, osnutki sprememb.
+- Samo na strežniku: skupinske lestvice, celotna zgodovina aktivnosti, skupinski feed.
+
+3) Sinhronizacija
+- Sprožilci: prijava, ponovna povezava, ročna osvežitev, periodično osveževanje.
+- Obseg: spremembe nad cilji, nalogami, sprinti, napredkom, opomniki in skupinami.
+- Pravilo konfliktov: novejša sprememba ima prednost; po potrebi uporabniška potrditev.
+
+4) Funkcionalne tehnične zahteve
+- Opomniki in opozorila: Notification API + Service Worker.
+- Validacija podatkov: na odjemalcu pred pošiljanjem API zahtev.
+- Varnost: HTTPS, varna seja, nadzor dostopa do skupin in izzivov.
+
+5) Naprava in omejitve
+- Posebni senzorji (GPS, kamera, NFC) niso potrebni.
+- Za polno skupinsko delovanje je potreben internet.
