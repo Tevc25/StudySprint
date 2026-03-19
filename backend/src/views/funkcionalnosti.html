@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Funkcionalnosti strežnika – StudySprint</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fb; color: #222; line-height: 1.7; }
+    header { background: #2d6be4; color: #fff; padding: 2.5rem 2rem 2rem; }
+    header h1 { font-size: 2.2rem; font-weight: 700; }
+    header p { margin-top: 0.5rem; font-size: 1.1rem; opacity: 0.9; }
+    main { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem 4rem; }
+    .uml { text-align: center; margin: 2rem 0; }
+    .uml img { max-width: 100%; border: 1px solid #cdd5e0; border-radius: 8px; padding: 1rem; background: #fff; }
+    h2 { color: #2d6be4; margin-top: 2.5rem; margin-bottom: 1rem; font-size: 1.5rem; border-bottom: 2px solid #e0e7f3; padding-bottom: 0.4rem; }
+    h3 { color: #1a3a6b; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    .card { background: #fff; border: 1px solid #dde3f0; border-radius: 8px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+    .card p { margin-top: 0.3rem; }
+    ul { padding-left: 1.5rem; }
+    ul li { margin: 0.2rem 0; }
+    .badge { display: inline-block; background: #e8f0fe; color: #2d6be4; border-radius: 4px; padding: 0.1rem 0.5rem; font-size: 0.85rem; font-weight: 600; margin-right: 4px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    th { background: #2d6be4; color: #fff; padding: 0.6rem 1rem; text-align: left; }
+    td { padding: 0.5rem 1rem; border-bottom: 1px solid #e0e7f3; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f4f6fb; }
+    code { background: #f0f4ff; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>StudySprint – Funkcionalnosti strežnika</h1>
+  <p>REST API strežnik za upravljanje učnih ciljev, nalog, skupin in izzivov</p>
+</header>
+<main>
+
+  <div class="uml">
+    <h2>UML Diagram primerov uporabe</h2>
+    <img src="/public/uml-diagram.svg" alt="UML diagram primerov uporabe" />
+  </div>
+
+  <h2>Akterji sistema</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Uporabnik</strong> – osnovne funkcionalnosti (registracija, prijava, cilji, naloge, napredek, obvestila)</li>
+      <li><strong>Član skupine</strong> – vse funkcionalnosti uporabnika + pridružitev skupini, sodelovanje v izzivih</li>
+      <li><strong>Moderator skupin</strong> – vse funkcionalnosti + ustvarjanje skupin, izzivov, dodajanje članov, zagon izzivov</li>
+      <li><strong>Informacijski sistem za obveščanje</strong> – pošiljanje opomnikov in sistemskih sporočil</li>
+    </ul>
+  </div>
+
+  <h2>Funkcionalne zahteve</h2>
+
+  <div class="card">
+    <h3>3.1 Registracija</h3>
+    <p><strong>Namen:</strong> Ustvarjanje novega uporabniškega računa.</p>
+    <p><strong>Vhodi:</strong> ime, e-pošta, geslo, vloga</p>
+    <p><strong>Izhodi:</strong> podatki novega uporabnika ali sporočilo o napaki</p>
+    <p><strong>Endpoint:</strong> <code>POST /users</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.2 Prijava</h3>
+    <p><strong>Namen:</strong> Preverjanje identitete in dostop do sistema.</p>
+    <p><strong>Vhodi:</strong> e-pošta, geslo</p>
+    <p><strong>Izhodi:</strong> podatki o uporabniku ali sporočilo o napaki</p>
+    <p><strong>Endpoint:</strong> <code>POST /users/login</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.3 Upravljanje učnih ciljev</h3>
+    <p><strong>Namen:</strong> Načrtovanje in organizacija učenja.</p>
+    <p><strong>Vhodi:</strong> naslov, opis, rok, userId, status</p>
+    <p><strong>Izhodi:</strong> seznam/podrobnosti ciljev, potrditev operacije</p>
+    <p><strong>Endpointi:</strong> <code>GET/POST /goals</code>, <code>GET/PUT/DELETE /goals/:id</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.4 Upravljanje nalog</h3>
+    <p><strong>Namen:</strong> Razčlenitev ciljev na konkretne naloge.</p>
+    <p><strong>Vhodi:</strong> naslov, opis, rok, goalId, userId, completed</p>
+    <p><strong>Izhodi:</strong> seznam/podrobnosti nalog, potrditev operacije</p>
+    <p><strong>Endpointi:</strong> <code>GET/POST /tasks</code>, <code>GET/PUT/DELETE /tasks/:id</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.5 Pregled napredka</h3>
+    <p><strong>Namen:</strong> Prikaz stopnje doseganja ciljev in opravljanja nalog.</p>
+    <p><strong>Vhodi:</strong> userId ali goalId</p>
+    <p><strong>Izhodi:</strong> odstotek napredka, število opravljenih/neopravljenih nalog</p>
+    <p><strong>Endpointi:</strong> <code>GET /progress/:userId</code>, <code>GET /progress/goal/:goalId</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.6 Pregled obvestil</h3>
+    <p><strong>Namen:</strong> Prikaz opomnikov in sistemskih sporočil.</p>
+    <p><strong>Vhodi:</strong> userId</p>
+    <p><strong>Izhodi:</strong> seznam obvestil</p>
+    <p><strong>Endpointi:</strong> <code>GET/POST /notifications</code>, <code>GET/DELETE /notifications/:id</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.7 Pridružitev skupini</h3>
+    <p><strong>Namen:</strong> Vključitev uporabnika v skupinsko sodelovanje.</p>
+    <p><strong>Vhodi:</strong> groupId, userId</p>
+    <p><strong>Izhodi:</strong> posodobljen seznam članov ali sporočilo o napaki</p>
+    <p><strong>Endpoint:</strong> <code>POST /groups/:id/join</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.8 Sodelovanje v skupinskem izzivu</h3>
+    <p><strong>Namen:</strong> Beleženje sodelovanja v skupinskih aktivnostih.</p>
+    <p><strong>Vhodi:</strong> challengeId, userId</p>
+    <p><strong>Izhodi:</strong> potrditev, status, napredek</p>
+    <p><strong>Endpoint:</strong> <code>POST /challenges/:id/participate</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.9 Ustvarjanje skupinskega izziva</h3>
+    <p><strong>Namen:</strong> Priprava skupinske aktivnosti (moderator).</p>
+    <p><strong>Vhodi:</strong> naslov, opis, datumi, groupId</p>
+    <p><strong>Izhodi:</strong> podrobnosti izziva</p>
+    <p><strong>Endpoint:</strong> <code>POST /challenges</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.10 Zagon skupinskega izziva</h3>
+    <p><strong>Namen:</strong> Aktivacija izziva za člane (moderator).</p>
+    <p><strong>Vhodi:</strong> challengeId</p>
+    <p><strong>Izhodi:</strong> status aktivnega izziva, čas zagona</p>
+    <p><strong>Endpoint:</strong> <code>POST /challenges/:id/start</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.11 Ustvarjanje skupine</h3>
+    <p><strong>Namen:</strong> Vzpostavitev nove učne skupine (moderator).</p>
+    <p><strong>Vhodi:</strong> naziv, opis, moderatorId</p>
+    <p><strong>Izhodi:</strong> podrobnosti skupine</p>
+    <p><strong>Endpoint:</strong> <code>POST /groups</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.12 Dodajanje članov</h3>
+    <p><strong>Namen:</strong> Upravljanje članstva (moderator).</p>
+    <p><strong>Vhodi:</strong> groupId, seznam userIds</p>
+    <p><strong>Izhodi:</strong> posodobljen seznam članov</p>
+    <p><strong>Endpoint:</strong> <code>POST /groups/:id/members</code></p>
+  </div>
+
+  <div class="card">
+    <h3>3.13 Pošiljanje opomnikov in sporočil</h3>
+    <p><strong>Namen:</strong> Obveščanje uporabnikov (informacijski sistem).</p>
+    <p><strong>Vhodi:</strong> userId, vsebina, tip, čas</p>
+    <p><strong>Izhodi:</strong> ustvarjeno obvestilo, status pošiljanja</p>
+    <p><strong>Endpoint:</strong> <code>POST /notifications</code></p>
+  </div>
+
+  <h2>Pregled vseh API endpointov</h2>
+  <table>
+    <tr><th>Metoda</th><th>Pot</th><th>Opis</th></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/users</code></td><td>Vsi uporabniki</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/users</code></td><td>Registracija</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/users/login</code></td><td>Prijava</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/users/:id</code></td><td>Uporabnik po ID</td></tr>
+    <tr><td><span class="badge">PUT</span></td><td><code>/users/:id</code></td><td>Posodobi uporabnika</td></tr>
+    <tr><td><span class="badge">DELETE</span></td><td><code>/users/:id</code></td><td>Izbriši uporabnika</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/goals</code></td><td>Vsi cilji</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/goals</code></td><td>Ustvari cilj</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/goals/:id</code></td><td>Cilj po ID</td></tr>
+    <tr><td><span class="badge">PUT</span></td><td><code>/goals/:id</code></td><td>Posodobi cilj</td></tr>
+    <tr><td><span class="badge">DELETE</span></td><td><code>/goals/:id</code></td><td>Izbriši cilj</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/tasks</code></td><td>Vse naloge</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/tasks</code></td><td>Ustvari nalogo</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/tasks/:id</code></td><td>Naloga po ID</td></tr>
+    <tr><td><span class="badge">PUT</span></td><td><code>/tasks/:id</code></td><td>Posodobi nalogo</td></tr>
+    <tr><td><span class="badge">DELETE</span></td><td><code>/tasks/:id</code></td><td>Izbriši nalogo</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/progress/:userId</code></td><td>Napredek uporabnika</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/progress/goal/:goalId</code></td><td>Napredek cilja</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/groups</code></td><td>Vse skupine</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/groups</code></td><td>Ustvari skupino</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/groups/:id</code></td><td>Skupina po ID</td></tr>
+    <tr><td><span class="badge">PUT</span></td><td><code>/groups/:id</code></td><td>Posodobi skupino</td></tr>
+    <tr><td><span class="badge">DELETE</span></td><td><code>/groups/:id</code></td><td>Izbriši skupino</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/groups/:id/join</code></td><td>Pridruži se skupini</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/groups/:id/members</code></td><td>Dodaj člane</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/groups/:id/members</code></td><td>Člani skupine</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/challenges</code></td><td>Vsi izzivi</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/challenges</code></td><td>Ustvari izziv</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/challenges/:id</code></td><td>Izziv po ID</td></tr>
+    <tr><td><span class="badge">PUT</span></td><td><code>/challenges/:id</code></td><td>Posodobi izziv</td></tr>
+    <tr><td><span class="badge">DELETE</span></td><td><code>/challenges/:id</code></td><td>Izbriši izziv</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/challenges/:id/start</code></td><td>Zaženi izziv</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/challenges/:id/participate</code></td><td>Sodeluj v izzivu</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/notifications</code></td><td>Vsa obvestila</td></tr>
+    <tr><td><span class="badge">POST</span></td><td><code>/notifications</code></td><td>Pošlji obvestilo</td></tr>
+    <tr><td><span class="badge">GET</span></td><td><code>/notifications/:id</code></td><td>Obvestilo po ID</td></tr>
+    <tr><td><span class="badge">DELETE</span></td><td><code>/notifications/:id</code></td><td>Izbriši obvestilo</td></tr>
+  </table>
+
+</main>
+</body>
+</html>
