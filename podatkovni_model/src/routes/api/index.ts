@@ -33,6 +33,29 @@ const registerStandardCrud = (
   apiRouter.delete(`${basePath}/:id`, asyncHandler(controller.remove));
 };
 
+apiRouter.get('/', (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'StudySprint API is running.',
+    data: {
+      docs: '/api-docs/',
+      openApi: '/api-docs.json',
+      resources: [
+        '/api/subjects',
+        '/api/goals',
+        '/api/tasks',
+        '/api/sprints',
+        '/api/progress',
+        '/api/reminders',
+        '/api/groups',
+        '/api/group-memberships',
+        '/api/group-challenges',
+        '/api/sync'
+      ]
+    }
+  });
+});
+
 registerStandardCrud('/subjects', subjectsController);
 registerStandardCrud('/goals', goalsController);
 registerStandardCrud('/tasks', tasksController);
