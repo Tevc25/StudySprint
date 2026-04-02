@@ -29,19 +29,24 @@ Uporabljene tehnologije:
   - swagger-ui-express (interaktivna API dokumentacija)
   - axios (HTTP odjemalec za demo skript)
   - dotenv (konfiguracija prek .env datoteke)
+  - jsonwebtoken (JWT žetoni za OAuth 2.0 avtentikacijo)
 
 Struktura projekta:
   index.ts             – vstopna točka, inicializacija Express strežnika
   src/
     api/               – vse API poti in obdelovalci zahtev
-      index.ts         – registracija vseh routerjev
+      index.ts         – registracija vseh routerjev (z zaščito)
+      auth.ts          – /auth/token (OAuth 2.0 token endpoint)
       users.ts         – /users endpointi
-      goals.ts         – /goals endpointi
-      tasks.ts         – /tasks endpointi
-      groups.ts        – /groups endpointi
-      challenges.ts    – /challenges endpointi
-      notifications.ts – /notifications endpointi
-      progress.ts      – /progress endpointi
+      goals.ts         – /goals endpointi (zaščiteno)
+      tasks.ts         – /tasks endpointi (zaščiteno)
+      groups.ts        – /groups endpointi (zaščiteno)
+      challenges.ts    – /challenges endpointi (zaščiteno)
+      notifications.ts – /notifications endpointi (zaščiteno)
+      progress.ts      – /progress endpointi (zaščiteno)
+    auth/
+      tokenService.ts  – generiranje in preverjanje JWT žetonov
+      middleware.ts    – Express middleware za Bearer token avtentikacijo
     services/          – poslovna logika, Firestore CRUD operacije
     models/            – TypeScript vmesniki (interfaces) za entitete
     config/
@@ -50,7 +55,7 @@ Struktura projekta:
     views/             – HTML dokumentacija (/funkcionalnosti-streznika)
     public/            – statične datoteke (UML diagram)
     client/
-      client.ts        – demo Node.js odjemalec z axios
+      client.ts        – demo Node.js odjemalec z OAuth 2.0 tokom
 
 Način delovanja REST API-ja:
   - Strežnik posluša na portu iz .env (privzeto 3000)
@@ -62,8 +67,17 @@ Način delovanja REST API-ja:
   - HTML opis funkcionalnosti na /funkcionalnosti-streznika
   - Tehnične posebnosti na /posebnosti (ta dokument)
 
+OAuth 2.0 avtentikacija:
+  - Tok: Resource Owner Password Credentials Grant
+  - Endpoint: POST /auth/token
+  - Telo zahteve: grant_type=password, username, password, client_id
+  - Odgovor: { access_token, token_type: "Bearer", expires_in: 3600 }
+  - Zaščitene poti pričakujejo: Authorization: Bearer <access_token>
+  - Žetoni so JWT, podpisani s skrivnostjo iz JWT_SECRET
+
 Konfiguracija (.env):
   PORT=3000
+  JWT_SECRET=...
   FIREBASE_PROJECT_ID=...
   FIREBASE_PRIVATE_KEY=...
   FIREBASE_CLIENT_EMAIL=...

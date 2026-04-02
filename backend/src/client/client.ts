@@ -3,32 +3,51 @@ import axios from 'axios';
 const BASE = 'http://localhost:3000';
 
 async function demo() {
-  console.log('=== StudySprint API Odjemalec ===\n');
+  console.log('=== StudySprint API Odjemalec (OAuth 2.0) ===\n');
 
-  // POST – registracija novega uporabnika
+  // --- REGISTRACIJA ---
   console.log('1. POST /users – Registracija uporabnika');
+  const email = `janez_${Date.now()}@example.com`;
+  const password = 'geslo123';
   const createRes = await axios.post(`${BASE}/users`, {
     name: 'Janez Novak',
-    email: `janez_${Date.now()}@example.com`,
-    password: 'geslo123',
+    email,
+    password,
     role: 'user',
   });
   const user = createRes.data;
   console.log('   Ustvarjen:', user);
 
-  // GET – pridobi vse uporabnike
-  console.log('\n2. GET /users – Seznam vseh uporabnikov');
+  // --- OAuth 2.0: pridobitev žetona (Resource Owner Password Credentials Grant) ---
+  console.log('\n2. POST /auth/token – Pridobitev OAuth 2.0 žetona');
+  const tokenRes = await axios.post(`${BASE}/auth/token`, {
+    grant_type: 'password',
+    username: email,
+    password,
+    client_id: 'studysprint-client',
+  });
+  const { access_token, token_type, expires_in } = tokenRes.data;
+  console.log(`   Žeton pridobljen (${token_type}, velja ${expires_in}s)`);
+  console.log(`   access_token: ${access_token.slice(0, 40)}...`);
+
+  // Axios instanca s prednastavitvijo avtorizacijskega glave
+  const api = axios.create({
+    baseURL: BASE,
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+
+  // --- Zaščitene poti (zahtevajo Bearer žeton) ---
+
+  console.log('\n3. GET /users – Seznam vseh uporabnikov');
   const listRes = await axios.get(`${BASE}/users`);
   console.log(`   Skupaj uporabnikov: ${listRes.data.length}`);
 
-  // PUT – posodobitev uporabnika
-  console.log(`\n3. PUT /users/${user.id} – Posodobitev uporabnika`);
+  console.log(`\n4. PUT /users/${user.id} – Posodobitev uporabnika`);
   const updateRes = await axios.put(`${BASE}/users/${user.id}`, { name: 'Janez Posodobljen' });
   console.log('   Posodobljeno:', updateRes.data);
 
-  // POST – ustvari cilj
-  console.log('\n4. POST /goals – Ustvari učni cilj');
-  const goalRes = await axios.post(`${BASE}/goals`, {
+  console.log('\n5. POST /goals – Ustvari učni cilj (zaščiteno)');
+  const goalRes = await api.post('/goals', {
     title: 'Naučiti se Node.js',
     description: 'Osnove Express in TypeScript',
     deadline: '2025-06-01',
@@ -37,9 +56,8 @@ async function demo() {
   const goal = goalRes.data;
   console.log('   Cilj:', goal);
 
-  // POST – ustvari nalogo
-  console.log('\n5. POST /tasks – Ustvari nalogo');
-  const taskRes = await axios.post(`${BASE}/tasks`, {
+  console.log('\n6. POST /tasks – Ustvari nalogo (zaščiteno)');
+  const taskRes = await api.post('/tasks', {
     title: 'Preberi dokumentacijo Express',
     description: 'Express.js uradna dokumentacija',
     deadline: '2025-05-15',
@@ -50,25 +68,32 @@ async function demo() {
   const task = taskRes.data;
   console.log('   Naloga:', task);
 
-  // PUT – označi nalogo kot opravljeno
-  console.log(`\n6. PUT /tasks/${task.id} – Naloga opravljena`);
-  const doneRes = await axios.put(`${BASE}/tasks/${task.id}`, { completed: true });
+  console.log(`\n7. PUT /tasks/${task.id} – Naloga opravljena (zaščiteno)`);
+  const doneRes = await api.put(`/tasks/${task.id}`, { completed: true });
   console.log('   Posodobljeno:', doneRes.data);
 
-  // GET – napredek
-  console.log(`\n7. GET /progress/${user.id} – Napredek uporabnika`);
-  const progressRes = await axios.get(`${BASE}/progress/${user.id}`);
+  console.log(`\n8. GET /progress/${user.id} – Napredek uporabnika (zaščiteno)`);
+  const progressRes = await api.get(`/progress/${user.id}`);
   console.log('   Napredek:', progressRes.data);
 
-  // DELETE – izbriši testno nalogo
-  console.log(`\n8. DELETE /tasks/${task.id} – Izbriši nalogo`);
-  const delTaskRes = await axios.delete(`${BASE}/tasks/${task.id}`);
-  console.log('  ', delTaskRes.data.message);
+  // --- Preizkus zavrnjenega dostopa brez žetona ---
+  console.log('\n9. GET /goals – Brez žetona (pričakujemo 401)');
+  try {
+    await axios.get(`${BASE}/goals`);
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err) && err.response) {
+      console.log(`   Status: ${err.response.status} – ${JSON.stringify(err.response.data)}`);
+    }
+  }
 
-  // DELETE – izbriši testnega uporabnika
-  console.log(`\n9. DELETE /users/${user.id} – Počisti testnega uporabnika`);
+  // --- Čiščenje ---
+  console.log(`\n10. DELETE /tasks/${task.id} – Izbriši nalogo (zaščiteno)`);
+  const delTaskRes = await api.delete(`/tasks/${task.id}`);
+  console.log('   ', delTaskRes.data.message);
+
+  console.log(`\n11. DELETE /users/${user.id} – Počisti testnega uporabnika`);
   const delRes = await axios.delete(`${BASE}/users/${user.id}`);
-  console.log('  ', delRes.data.message);
+  console.log('   ', delRes.data.message);
 
   console.log('\n=== Demo zaključen ===');
 }
