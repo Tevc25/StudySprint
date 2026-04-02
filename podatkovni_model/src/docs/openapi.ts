@@ -32,6 +32,15 @@ const createdResponse = {
   }
 };
 
+const oauthErrorResponse = {
+  description: 'OAuth error',
+  content: {
+    'application/json': {
+      schema: { $ref: '#/components/schemas/OAuthError' }
+    }
+  }
+};
+
 const errorResponses = {
   400: {
     description: 'Bad Request',
@@ -78,6 +87,7 @@ const buildCrudPaths = (
       summary: `List ${tag.toLowerCase()}`,
       responses: {
         200: successResponse,
+        401: oauthErrorResponse,
         ...errorResponses
       }
     },
@@ -87,6 +97,7 @@ const buildCrudPaths = (
       requestBody: jsonBody(inputSchemaName),
       responses: {
         201: createdResponse,
+        401: oauthErrorResponse,
         ...errorResponses
       }
     }
@@ -98,6 +109,7 @@ const buildCrudPaths = (
       parameters: [idPathParam],
       responses: {
         200: successResponse,
+        401: oauthErrorResponse,
         ...errorResponses
       }
     },
@@ -108,6 +120,7 @@ const buildCrudPaths = (
       requestBody: jsonBody(inputSchemaName),
       responses: {
         200: successResponse,
+        401: oauthErrorResponse,
         ...errorResponses
       }
     },
@@ -117,6 +130,7 @@ const buildCrudPaths = (
       parameters: [idPathParam],
       responses: {
         204: { description: 'No Content' },
+        401: oauthErrorResponse,
         ...errorResponses
       }
     }
@@ -131,6 +145,11 @@ export const openApiSpec = {
     description:
       'REST API za podatkovni model, sinhronizacijo in skupinsko sodelovanje v aplikaciji StudySprint.'
   },
+  security: [
+    {
+      OAuth2ClientCredentials: []
+    }
+  ],
   servers: [
     {
       url: 'http://localhost:3000',
@@ -138,6 +157,7 @@ export const openApiSpec = {
     }
   ],
   tags: [
+    { name: 'Authentication' },
     { name: 'Subjects' },
     { name: 'Goals' },
     { name: 'Tasks' },
@@ -150,6 +170,36 @@ export const openApiSpec = {
     { name: 'Sync' }
   ],
   paths: {
+    '/oauth/token': {
+      post: {
+        tags: ['Authentication'],
+        summary: 'Issue OAuth 2.0 access token',
+        description:
+          'OAuth 2.0 token endpoint for the client_credentials flow. Client credentials can be sent via HTTP Basic auth or form fields.',
+        security: [],
+        requestBody: {
+          required: true,
+          content: {
+            'application/x-www-form-urlencoded': {
+              schema: { $ref: '#/components/schemas/OAuthTokenRequest' }
+            }
+          }
+        },
+        responses: {
+          200: {
+            description: 'Access token issued',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/OAuthTokenResponse' }
+              }
+            }
+          },
+          400: oauthErrorResponse,
+          401: oauthErrorResponse
+        }
+      }
+    },
+
     ...buildCrudPaths('subjects', 'Subjects', 'SubjectInput'),
     ...buildCrudPaths('goals', 'Goals', 'GoalInput'),
     ...buildCrudPaths('tasks', 'Tasks', 'TaskInput'),
@@ -165,6 +215,7 @@ export const openApiSpec = {
         summary: 'List group memberships',
         responses: {
           200: successResponse,
+          401: oauthErrorResponse,
           ...errorResponses
         }
       },
@@ -174,6 +225,7 @@ export const openApiSpec = {
         requestBody: jsonBody('GroupMembershipInput'),
         responses: {
           201: createdResponse,
+          401: oauthErrorResponse,
           ...errorResponses
         }
       }
@@ -186,6 +238,7 @@ export const openApiSpec = {
         parameters: [idPathParam],
         responses: {
           204: { description: 'No Content' },
+          401: oauthErrorResponse,
           ...errorResponses
         }
       }
@@ -199,6 +252,7 @@ export const openApiSpec = {
         requestBody: jsonBody('TaskStatusPatchInput'),
         responses: {
           200: successResponse,
+          401: oauthErrorResponse,
           ...errorResponses
         }
       }
@@ -219,6 +273,7 @@ export const openApiSpec = {
         },
         responses: {
           200: successResponse,
+          401: oauthErrorResponse,
           ...errorResponses
         }
       }
@@ -231,12 +286,28 @@ export const openApiSpec = {
         requestBody: jsonBody('SyncInput'),
         responses: {
           200: successResponse,
+          401: oauthErrorResponse,
           ...errorResponses
         }
       }
     }
   },
   components: {
+    securitySchemes: {
+      OAuth2ClientCredentials: {
+        type: 'oauth2',
+        flows: {
+          clientCredentials: {
+            tokenUrl: '/oauth/token',
+            scopes: {
+              'api.read': 'Read StudySprint resources.',
+              'api.write': 'Create, update, and delete StudySprint resources.',
+              'api.sync': 'Synchronize local StudySprint changes.'
+            }
+          }
+        }
+      }
+    },
     schemas: {
       ApiSuccess: {
         type: 'object',
@@ -256,6 +327,53 @@ export const openApiSpec = {
           errors: {
             type: 'array',
             items: { type: 'string' }
+          }
+        }
+      },
+      OAuthTokenRequest: {
+        type: 'object',
+        required: ['grant_type'],
+        properties: {
+          grant_type: {
+            type: 'string',
+            enum: ['client_credentials'],
+            example: 'client_credentials'
+          },
+          client_id: {
+            type: 'string',
+            example: 'studysprint-cli'
+          },
+          client_secret: {
+            type: 'string',
+            example: 'studysprint-secret'
+          },
+          scope: {
+            type: 'string',
+            example: 'api.read api.write api.sync'
+          }
+        }
+      },
+      OAuthTokenResponse: {
+        type: 'object',
+        required: ['access_token', 'token_type', 'expires_in', 'scope'],
+        properties: {
+          access_token: { type: 'string' },
+          token_type: { type: 'string', example: 'Bearer' },
+          expires_in: { type: 'number', example: 3600 },
+          scope: { type: 'string', example: 'api.read api.write api.sync' }
+        }
+      },
+      OAuthError: {
+        type: 'object',
+        required: ['error', 'error_description'],
+        properties: {
+          error: {
+            type: 'string',
+            example: 'invalid_token'
+          },
+          error_description: {
+            type: 'string',
+            example: 'The supplied access token is missing, invalid, or expired.'
           }
         }
       },

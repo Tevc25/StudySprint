@@ -1,5 +1,14 @@
 export const restRouteContractText = `StudySprint REST storitve (član 2)
 
+OAuth 2.0 avtentikacija
+- POST /oauth/token
+  Grant type: client_credentials
+  Content-Type: application/x-www-form-urlencoded
+  Parametri: grant_type=client_credentials, scope?
+  Avtentikacija klienta: HTTP Basic (client_id:client_secret) ali client_id/client_secret v bodyju
+- Vsi klici na /api/* zahtevajo glavo:
+  Authorization: Bearer <access_token>
+
 1) Subjects
 - GET /api/subjects
 - GET /api/subjects/:id
@@ -77,6 +86,7 @@ Status kode
 - 200 OK
 - 201 Created
 - 204 No Content
+- 401 Unauthorized
 - 400 Bad Request
 - 404 Not Found
 - 409 Conflict

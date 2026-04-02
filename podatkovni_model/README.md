@@ -17,6 +17,11 @@ REST API z metodami `GET`, `POST`, `PUT`, `DELETE`, `PATCH`:
   GroupMemberships, GroupChallenges.
 - `POST /api/sync` simulira sinhronizacijo lokalnih sprememb.
 
+OAuth 2.0:
+- `POST /oauth/token` izdaja `Bearer` access token po toku `client_credentials`.
+- vsi klici na `/api/*` zahtevajo glavo `Authorization: Bearer <token>`.
+- testni odjemalec si token shrani lokalno v `.auth/test-client-token.json` in ga ponovno uporabi do poteka.
+
 Dodatno:
 - TypeScript tipi za vse entitete,
 - in-memory repository sloj (brez baze),
@@ -40,6 +45,13 @@ Swagger:
 - UI: `http://localhost:3000/api-docs`
 - JSON: `http://localhost:3000/api-docs.json`
 
+Privzete OAuth 2.0 poverilnice za lokalni razvoj:
+- `client_id`: `studysprint-cli`
+- `client_secret`: `studysprint-secret`
+- `scope`: `api.read api.write api.sync`
+
+Po potrebi jih lahko prepišete z `OAUTH_CLIENT_ID`, `OAUTH_CLIENT_SECRET`, `OAUTH_ALLOWED_SCOPES` in `OAUTH_ACCESS_TOKEN_TTL`.
+
 ## Build in produkcijski zagon
 
 ```bash
@@ -55,7 +67,7 @@ V ločenem terminalu (ob zagnanem strežniku):
 npm run client
 ```
 
-Odjemalec izvede tipičen CRUD + PATCH tok in pokliče `/api/sync`.
+Odjemalec najprej pridobi OAuth 2.0 access token, ga shrani v `.auth/test-client-token.json`, nato izvede tipičen CRUD + PATCH tok in pokliče `/api/sync`.
 
 ## Struktura
 

@@ -1,10 +1,13 @@
 import { Router } from 'express';
+import { oauthService } from '../../auth/oauth.service';
 import { CrudController } from '../../controllers/crud.controller';
+import { requireOAuth } from '../../middleware/require-oauth';
 import { finishSprint, patchTaskStatus, syncData } from '../../controllers/special.controller';
 import { domainServices } from '../../services/domain-services';
 import { asyncHandler } from '../../utils/async-handler';
 
 export const apiRouter = Router();
+apiRouter.use(requireOAuth);
 
 const subjectsController = new CrudController('Subject', domainServices.subjectService);
 const goalsController = new CrudController('Goal', domainServices.goalService);
@@ -34,12 +37,20 @@ const registerStandardCrud = (
 };
 
 apiRouter.get('/', (_req, res) => {
+  const authMetadata = oauthService.getTokenEndpointMetadata();
+
   res.status(200).json({
     success: true,
     message: 'StudySprint API is running.',
     data: {
       docs: '/api-docs/',
       openApi: '/api-docs.json',
+      authentication: {
+        grantType: 'client_credentials',
+        tokenUrl: '/oauth/token',
+        clientId: authMetadata.clientId,
+        allowedScopes: authMetadata.allowedScopes
+      },
       resources: [
         '/api/subjects',
         '/api/goals',

@@ -18,7 +18,15 @@ app.use(express.static(publicDir));
 app.use('/images', express.static(path.join(publicDir, 'images')));
 app.use('/styles', express.static(path.join(publicDir, 'styles')));
 app.use('/ER', express.static(erDir));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(openApiSpec, {
+    swaggerOptions: {
+      persistAuthorization: true
+    }
+  })
+);
 app.get('/api-docs.json', (_req, res) => {
   res.json(openApiSpec);
 });

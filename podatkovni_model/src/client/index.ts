@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { installOAuth } from './oauth';
 
 const api = axios.create({
   baseURL: process.env.API_URL ?? 'http://localhost:3000/api',
@@ -37,6 +38,8 @@ const run = async (): Promise<void> => {
   let challengeId = '';
 
   try {
+    await installOAuth(api);
+
     log('GET /subjects', await api.get('/subjects'));
 
     const createdSubject = await api.post('/subjects', {
