@@ -46,7 +46,7 @@ const server = http.createServer((req, res) => {
 	const host = req.headers.host ?? `${HOST}:${PORT}`;
 	const urlPath = new URL(req.url ?? "/", `http://${host}`).pathname;
 
-	if (urlPath.startsWith("/api") || urlPath.startsWith("/api-docs")) {
+	if (urlPath.startsWith("/api") || urlPath.startsWith("/api-docs") || urlPath.startsWith("/oauth")) {
 		app(req, res);
 		return;
 	}

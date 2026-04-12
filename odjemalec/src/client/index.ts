@@ -1,4 +1,5 @@
 import axios from "axios";
+import { installOAuth } from "./oauth";
 
 const api = axios.create({
   baseURL: process.env.API_URL ?? "http://127.0.0.1:3000/api",
@@ -12,6 +13,9 @@ function print(label: string, payload: unknown): void {
 }
 
 async function run(): Promise<void> {
+  // Initialize OAuth before making any API requests
+  await installOAuth(api);
+
   const suffix = Date.now();
 
   const createdGoal = await api.post("/goals", {
@@ -64,7 +68,7 @@ async function run(): Promise<void> {
   });
   print("POST /sync", syncResult.data);
 
-  console.log("\nOdjemalec je uspešno izvedel GET/POST/PUT/DELETE tok.");
+  console.log("\nOdjemalec je uspešno izvedel GET/POST/PUT/DELETE tok s OAuth avtentikacijo.");
 }
 
 run().catch((error: unknown) => {

@@ -1,7 +1,11 @@
 import { Request, Response, Router } from "express";
+import { requireOAuth } from "../middleware/require-oauth";
 import { generateId, ResourceName, store } from "../data/store";
 
 export const apiRouter = Router();
+
+// Apply OAuth authentication to all API routes
+apiRouter.use(requireOAuth);
 
 type IdEntity = { id: string };
 
