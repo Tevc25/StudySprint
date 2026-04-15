@@ -50,7 +50,7 @@ const toPlainHeaders = (headers?: AxiosRequestConfig['headers']): RawAxiosReques
 const withAuthorizationHeader = (
   headers: AxiosRequestConfig['headers'],
   authorization: string
-): AxiosHeaders =>
+): typeof AxiosHeaders.prototype =>
   AxiosHeaders.from({
     ...toPlainHeaders(headers),
     Authorization: authorization

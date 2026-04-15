@@ -2,9 +2,11 @@ import { Router } from 'express';
 import { apiRouter } from './api';
 import { contentRouter } from './content.routes';
 import { oauthRouter } from './oauth.routes';
+import { pushRouter } from './push.routes';
 
 export const rootRouter = Router();
 
 rootRouter.use(contentRouter);
 rootRouter.use('/oauth', oauthRouter);
 rootRouter.use('/api', apiRouter);
+rootRouter.use('/push', pushRouter);
