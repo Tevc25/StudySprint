@@ -8,6 +8,7 @@ const STATIC_ASSETS = [
   '/pwa/index.html',
   '/pwa/manifest.json',
   '/pwa/app.js',
+  '/pwa/voice.js',
   '/pwa/style.css',
   '/pwa/icons/icon.svg'
 ];

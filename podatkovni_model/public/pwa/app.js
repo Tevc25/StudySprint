@@ -1251,6 +1251,40 @@ function formatDeadline(dateStr) {
   return formatDate(dateStr);
 }
 
+// ── Voice helpers ─────────────────────────────────────────────────────────────
+
+// Silent sprint cancel (no confirm() dialog) – used by voice commands.
+async function cancelSprintVoice() {
+  if (!sprintSt.active) return;
+  clearInterval(sprintSt.intervalId);
+  try {
+    await apiRequest('PUT', `/api/sprints/${sprintSt.id}`, { status: 'cancelled' });
+  } catch (_) { /* best effort */ }
+  sprintSt.active     = false;
+  sprintSt.id         = null;
+  sprintSt.intervalId = null;
+  showBanner('Sprint prekinjen (glasovni ukaz)', 'warning');
+  updateSprintDisplays();
+  if (state.currentView === 'dashboard' || state.currentView === 'sprints')
+    await renderCurrentView();
+}
+
+// Start a free 25-min sprint via voice (no task, default duration).
+async function startSprintVoice() {
+  if (sprintSt.active) return; // response already spoken by caller
+  await startSprint(null, 'Prosti sprint', 25);
+  if (state.currentView === 'sprints') renderSprintsView();
+}
+
+// Navigate to Goals entity list (appears under the "More" nav tab).
+function showGoalsView() {
+  state.currentView = 'more';
+  document.querySelectorAll('.nav-btn').forEach((b) =>
+    b.classList.toggle('active', b.dataset.view === 'more')
+  );
+  renderEntityList('goals');
+}
+
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 async function init() {
   try {
@@ -1306,6 +1340,9 @@ async function init() {
     await renderCurrentView();
     setTimeout(subscribeToPush, 3000);
 
+    // ── Voice commands ──────────────────────────────────────────────────────
+    initVoice();
+
   } catch (err) {
     console.error('Init error:', err);
     setMainHTML(`<div class="error-state">Napaka pri zagonu: ${esc(err.message)}</div>`);
@@ -1313,3 +1350,105 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ── Voice initialisation ──────────────────────────────────────────────────────
+function initVoice() {
+  const toggleBtn = document.getElementById('voice-toggle-btn');
+
+  // Hide the button if browser has no speech recognition support
+  if (typeof VoiceController === 'undefined' || !new VoiceController().isSupported) {
+    if (toggleBtn) toggleBtn.style.display = 'none';
+    console.info('[Voice] SpeechRecognition not supported – voice button hidden');
+    return;
+  }
+
+  const voice = new VoiceController();
+
+  // ── Register commands ─────────────────────────────────────────────────────
+
+  voice.addCommand({
+    patterns: ['pokaži naloge', 'show tasks', 'naloge'],
+    handler: () => switchView('tasks'),
+    response: 'Prikazujem naloge.'
+  });
+
+  voice.addCommand({
+    patterns: ['pokaži napredek', 'show progress', 'napredek'],
+    handler: () => switchView('progress'),
+    response: 'Prikazujem napredek.'
+  });
+
+  voice.addCommand({
+    patterns: ['pokaži sprintanje', 'pokaži sprinte', 'show sprints', 'sprinti'],
+    handler: () => switchView('sprints'),
+    response: 'Prikazujem sprinte.'
+  });
+
+  voice.addCommand({
+    patterns: [/^začni sprint$/, /^start sprint$/],
+    handler: () => {
+      if (sprintSt.active) { voice.speak('Sprint je že aktiven.'); return; }
+      startSprintVoice();
+    },
+    response: (match) => sprintSt.active ? '' : 'Sprint se je začel.'
+  });
+
+  voice.addCommand({
+    patterns: ['ustavi sprint', 'stop sprint', 'prekini sprint', 'pavza'],
+    handler: () => {
+      if (!sprintSt.active) { voice.speak('Ni aktivnega sprinta.'); return; }
+      cancelSprintVoice();
+    },
+    response: (match) => sprintSt.active ? 'Sprint ustavljen.' : ''
+  });
+
+  voice.addCommand({
+    patterns: [/nova naloga (.+)/, /new task (.+)/],
+    handler: (match) => {
+      const taskName = match[1].trim();
+      if (state.currentView !== 'tasks') switchView('tasks');
+      // openAddModal renders the form synchronously – set value immediately after
+      setTimeout(() => {
+        openAddModal('tasks');
+        const titleInput = document.querySelector('#entity-form [name="title"]');
+        if (titleInput) { titleInput.value = taskName; titleInput.focus(); }
+      }, state.currentView !== 'tasks' ? 120 : 0);
+    },
+    response: (match) => `Ustvarjam nalogo: ${match[1].trim()}`
+  });
+
+  voice.addCommand({
+    patterns: ['sinhroniziraj', 'sync', 'sinhronizacija'],
+    handler: async () => {
+      showBanner('Sinhronizacija…', 'info');
+      await processOfflineQueue();
+      await renderCurrentView();
+    },
+    response: 'Sinhronizacija se je začela.'
+  });
+
+  voice.addCommand({
+    patterns: ['pokaži cilje', 'show goals', 'cilji'],
+    handler: () => showGoalsView(),
+    response: 'Prikazujem cilje.'
+  });
+
+  voice.addCommand({
+    patterns: ['domov', 'dashboard', 'pokaži domov'],
+    handler: () => switchView('dashboard'),
+    response: 'Prikazujem domačo stran.'
+  });
+
+  // ── Wire up mic button ────────────────────────────────────────────────────
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => voice.toggle());
+  }
+
+  // ── Alt+V keyboard shortcut ───────────────────────────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey && e.key === 'v') {
+      e.preventDefault();
+      voice.toggle();
+    }
+  });
+}

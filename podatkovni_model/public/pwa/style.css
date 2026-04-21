@@ -513,3 +513,85 @@ kbd {
   .todo-panel      { width: 100%; }
   .duration-grid   { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Voice UI ────────────────────────────────────────────────────────────── */
+
+/* Floating microphone button */
+.voice-btn {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 14px);
+  right: 16px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 110;
+  box-shadow: var(--shadow);
+  transition: background .2s, border-color .2s, color .2s;
+}
+.voice-btn:hover {
+  background: var(--border);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* Listening state: red + CSS pulse ring */
+.voice-btn.listening {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+  animation: voice-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes voice-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(239, 68, 68, 0.55); }
+  60%  { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0   rgba(239, 68, 68, 0); }
+}
+
+/* Listening indicator banner above bottom nav */
+.voice-indicator {
+  position: fixed;
+  bottom: var(--nav-h);
+  left: 0;
+  right: 0;
+  background: rgba(239, 68, 68, 0.15);
+  border-top: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  font-size: .78rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 5px 12px;
+  z-index: 105;
+  pointer-events: none;
+}
+.voice-indicator.hidden { display: none; }
+
+/* Toast showing last recognized transcript */
+.voice-toast {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: .8rem;
+  padding: 6px 16px;
+  z-index: 300;
+  white-space: nowrap;
+  max-width: calc(100vw - 32px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: var(--shadow);
+  transition: opacity .35s ease;
+}
+.voice-toast.hidden       { display: none; }
+.voice-toast.voice-toast--fade { opacity: 0; }
