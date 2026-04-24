@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="description" content="StudySprint – upravljaj učne cilje, naloge in sprinte">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="StudySprint">
+  <link rel="manifest" href="/pwa/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/pwa/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/pwa/icons/icon-192.png">
+  <link rel="stylesheet" href="/pwa/style.css">
+  <title>StudySprint</title>
+</head>
+<body>
+
+<!-- SVG icon sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" hidden aria-hidden="true">
+  <symbol id="ic-menu" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <path d="M2 4h12M2 8h12M2 12h12"/>
+  </symbol>
+  <symbol id="ic-search" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <circle cx="7" cy="7" r="4.5"/>
+    <path d="M15 15l-3.5-3.5"/>
+  </symbol>
+  <symbol id="ic-plus" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <path d="M8 2v12M2 8h12"/>
+  </symbol>
+  <symbol id="ic-edit" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11.5 2.5l2 2L5 13H3v-2L11.5 2.5z"/>
+  </symbol>
+  <symbol id="ic-trash" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 4h12M10 4V2.5a.5.5 0 00-.5-.5h-3a.5.5 0 00-.5.5V4M5.5 4v8a1 1 0 001 1h3a1 1 0 001-1V4"/>
+  </symbol>
+  <symbol id="ic-close" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <path d="M4 4l8 8M12 4l-8 8"/>
+  </symbol>
+  <symbol id="ic-target" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <circle cx="8" cy="8" r="6"/>
+    <circle cx="8" cy="8" r="2"/>
+  </symbol>
+  <symbol id="ic-tasks" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <path d="M2 4h2M6 4h8M2 8h2M6 8h8M2 12h2M6 12h8"/>
+  </symbol>
+  <symbol id="ic-bolt" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9.5 1.5l-5 7h4l-2 6 6-8.5H9l.5-4.5z"/>
+  </symbol>
+  <symbol id="ic-bell" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <path d="M8 2a4 4 0 014 4v3l1.5 2.5h-11L4 9V6a4 4 0 014-4z"/>
+    <path d="M6.5 13.5a1.5 1.5 0 003 0"/>
+  </symbol>
+  <symbol id="ic-refresh" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <path d="M13 8A5 5 0 103 8M13 4v4H9"/>
+  </symbol>
+  <symbol id="ic-eye" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/>
+    <circle cx="8" cy="8" r="2"/>
+  </symbol>
+  <symbol id="ic-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2.5 8l4 4 7-7"/>
+  </symbol>
+  <symbol id="ic-chevron-right" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 4l4 4-4 4"/>
+  </symbol>
+  <symbol id="ic-dot" viewBox="0 0 16 16">
+    <circle cx="8" cy="8" r="4" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-mic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="7" y="1" width="6" height="10" rx="3"/>
+    <path d="M4 10a6 6 0 0 0 12 0"/>
+    <line x1="10" y1="16" x2="10" y2="19"/>
+    <line x1="7" y1="19" x2="13" y2="19"/>
+  </symbol>
+</svg>
+
+<div id="app">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <button class="hdr-btn" id="menuBtn" aria-label="Preklopi meni">
+        <svg><use href="#ic-menu"/></svg>
+      </button>
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">S</div>
+        <span class="brand-name">StudySprint</span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <label class="search-wrap" for="searchInput">
+        <svg class="search-icon" aria-hidden="true"><use href="#ic-search"/></svg>
+        <input type="search" id="searchInput" placeholder="Iskanje..." autocomplete="off" aria-label="Iskanje">
+        <kbd class="search-hint">Ctrl+F</kbd>
+      </label>
+    </div>
+
+    <div class="header-right">
+      <div class="status-pill" id="statusPill">
+        <svg class="status-dot-svg" id="statusDotSvg" aria-hidden="true"><use href="#ic-dot"/></svg>
+        <span id="statusLabel">online</span>
+      </div>
+      <div class="voice-pill" id="voicePill" aria-live="polite" hidden>
+        <span class="voice-pulse" aria-hidden="true"></span>
+        <span id="voicePillLabel">Listening…</span>
+      </div>
+      <button class="hdr-btn voice-btn" id="voiceBtn" aria-label="Glasovni ukazi" title="Glasovni ukazi (Alt+V)">
+        <svg aria-hidden="true"><use href="#ic-mic"/></svg>
+      </button>
+      <button class="btn btn-primary" id="newGoalBtn">
+        <svg><use href="#ic-plus"/></svg>
+        Nov cilj
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar" aria-label="Navigacija">
+    <ul class="nav-list">
+      <li>
+        <a href="#" class="nav-link active" data-section="goals" aria-current="page">
+          <svg class="nav-icon" aria-hidden="true"><use href="#ic-target"/></svg>
+          <span>Cilji</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-section="tasks">
+          <svg class="nav-icon" aria-hidden="true"><use href="#ic-tasks"/></svg>
+          <span>Naloge</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-section="sprints">
+          <svg class="nav-icon" aria-hidden="true"><use href="#ic-bolt"/></svg>
+          <span>Sprinti</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-group">
+      <p class="sidebar-label">Bližnjice</p>
+      <ul class="shortcut-list">
+        <li><kbd>Alt+G</kbd><span>Nov cilj</span></li>
+        <li><kbd>Alt+N</kbd><span>Nova naloga</span></li>
+        <li><kbd>Alt+S</kbd><span>Nov sprint</span></li>
+        <li><kbd>Ctrl+F</kbd><span>Iskanje</span></li>
+        <li><kbd>Ctrl+S</kbd><span>Shrani</span></li>
+        <li><kbd>Alt+V</kbd><span>Mikrofon</span></li>
+        <li><kbd>Esc</kbd><span>Zapri</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-group" id="voicePanel">
+      <p class="sidebar-label">
+        <svg aria-hidden="true" style="width:12px;height:12px;vertical-align:-1px"><use href="#ic-mic"/></svg>
+        Glasovni ukazi
+      </p>
+      <ul class="shortcut-list voice-cmd-list">
+        <li><kbd>new goal</kbd><span>Nov cilj</span></li>
+        <li><kbd>new task</kbd><span>Nova naloga</span></li>
+        <li><kbd>new sprint</kbd><span>Nov sprint</span></li>
+        <li><kbd>show goals</kbd><span>Prikaži cilje</span></li>
+        <li><kbd>show tasks</kbd><span>Prikaži naloge</span></li>
+        <li><kbd>show sprints</kbd><span>Prikaži sprinte</span></li>
+        <li><kbd>search …</kbd><span>Iskanje</span></li>
+        <li><kbd>close</kbd><span>Zapri okno</span></li>
+        <li><kbd>sync</kbd><span>Sinhroniziraj</span></li>
+        <li><kbd>help</kbd><span>Pomoč</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-group">
+      <button class="sidebar-action-btn" id="installBtn" hidden>
+        <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v10M6 9l4 4 4-4"/><path d="M3 15h14"/></svg>
+        Namesti aplikacijo
+      </button>
+      <button class="sidebar-action-btn" id="syncNowBtn">
+        <svg aria-hidden="true"><use href="#ic-refresh"/></svg>
+        Sinhroniziraj
+      </button>
+      <button class="sidebar-action-btn" id="sendPushBtn">
+        <svg aria-hidden="true"><use href="#ic-bell"/></svg>
+        Test Push
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content" id="mainContent">
+
+    <!-- GOALS -->
+    <section id="section-goals" class="section active" aria-label="Učni cilji">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h1 class="section-title">Učni cilji</h1>
+          <span class="section-count" id="goalsCount"></span>
+        </div>
+        <div class="filter-row">
+          <div class="select-wrap">
+            <select id="statusFilter" aria-label="Filter po statusu">
+              <option value="">Vsi statusi</option>
+              <option value="planned">Planirano</option>
+              <option value="in_progress">V teku</option>
+              <option value="done">Zaključeno</option>
+            </select>
+            <svg class="select-arrow" aria-hidden="true"><use href="#ic-chevron-right"/></svg>
+          </div>
+          <div class="select-wrap">
+            <select id="priorityFilter" aria-label="Filter po prioriteti">
+              <option value="">Vse prioritete</option>
+              <option value="high">Visoka</option>
+              <option value="medium">Srednja</option>
+              <option value="low">Nizka</option>
+            </select>
+            <svg class="select-arrow" aria-hidden="true"><use href="#ic-chevron-right"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <ul id="goalsGrid" class="goals-grid"></ul>
+
+      <div id="emptyGoals" class="empty-state" hidden>
+        <div class="empty-glyph">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="24" cy="24" r="18"/>
+            <circle cx="24" cy="24" r="7"/>
+            <path d="M24 6v6M24 36v6M6 24h6M36 24h6"/>
+          </svg>
+        </div>
+        <p class="empty-title">Brez ciljev</p>
+        <p class="empty-sub">Dodaj prvi učni cilj in začni s sledenjem napredku.</p>
+        <button class="btn btn-primary" id="emptyNewGoalBtn">
+          <svg><use href="#ic-plus"/></svg>
+          Dodaj cilj
+        </button>
+      </div>
+    </section>
+
+    <!-- TASKS -->
+    <section id="section-tasks" class="section" aria-label="Naloge" hidden>
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h1 class="section-title">Naloge</h1>
+          <span class="section-count" id="tasksCount"></span>
+        </div>
+        <button class="btn btn-primary" id="newTaskBtn">
+          <svg><use href="#ic-plus"/></svg>
+          Nova naloga
+        </button>
+      </div>
+      <div id="tasksList" class="tasks-list"></div>
+      <div id="emptyTasks" class="empty-state" hidden>
+        <div class="empty-glyph">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <rect x="8" y="8" width="32" height="32" rx="4"/>
+            <path d="M16 24l6 6 10-10"/>
+          </svg>
+        </div>
+        <p class="empty-title">Brez nalog</p>
+        <p class="empty-sub">Razčleni cilj na konkretne korake.</p>
+      </div>
+    </section>
+
+    <!-- SPRINTS -->
+    <section id="section-sprints" class="section" aria-label="Sprinti" hidden>
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h1 class="section-title">Sprinti</h1>
+          <span class="section-count" id="sprintsCount"></span>
+        </div>
+        <button class="btn btn-primary btn-sm" id="newSprintBtn" data-action="new-sprint">
+          <svg aria-hidden="true"><use href="#ic-plus"/></svg>
+          Nov sprint
+        </button>
+      </div>
+      <div id="sprintsList" class="sprints-list"></div>
+      <div id="emptySprints" class="empty-state" hidden>
+        <div class="empty-glyph">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M28 4L16 26h12l-8 18 20-26H28L32 4z"/>
+          </svg>
+        </div>
+        <p class="empty-title">Brez sprintov</p>
+        <p class="empty-sub">Ni še evidentiranih učnih sprintov.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Goal modal -->
+<dialog class="modal-dialog" id="goalModal" aria-labelledby="goalModalTitle">
+  <div class="modal-header">
+    <h2 id="goalModalTitle" class="modal-title">Nov cilj</h2>
+    <button class="modal-close" id="closeGoalModal" aria-label="Zapri">
+      <svg><use href="#ic-close"/></svg>
+    </button>
+  </div>
+  <form id="goalForm" class="modal-body" novalidate>
+    <input type="hidden" id="goalId">
+    <div class="form-group">
+      <label class="form-label" for="goalTitle">Naslov</label>
+      <input class="form-input" type="text" id="goalTitle" required placeholder="npr. Priprava na izpit iz matematike">
+      <span class="field-error" id="goalTitleError"></span>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="goalDesc">Opis</label>
+      <textarea class="form-input" id="goalDesc" rows="3" placeholder="Kratek opis cilja…"></textarea>
+    </div>
+    <div class="form-row three">
+      <div class="form-group">
+        <label class="form-label" for="goalDeadline">Rok</label>
+        <input class="form-input" type="datetime-local" id="goalDeadline">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="goalPriority">Prioriteta</label>
+        <div class="select-wrap full">
+          <select class="form-input" id="goalPriority">
+            <option value="low">Nizka</option>
+            <option value="medium" selected>Srednja</option>
+            <option value="high">Visoka</option>
+          </select>
+          <svg class="select-arrow" aria-hidden="true"><use href="#ic-chevron-right"/></svg>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="goalStatus">Status</label>
+        <div class="select-wrap full">
+          <select class="form-input" id="goalStatus">
+            <option value="planned" selected>Planirano</option>
+            <option value="in_progress">V teku</option>
+            <option value="done">Zaključeno</option>
+          </select>
+          <svg class="select-arrow" aria-hidden="true"><use href="#ic-chevron-right"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" id="cancelGoalBtn">Prekliči</button>
+      <button type="submit" class="btn btn-primary">Shrani</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Task modal -->
+<dialog class="modal-dialog" id="taskModal" aria-labelledby="taskModalTitle">
+  <div class="modal-header">
+    <h2 id="taskModalTitle" class="modal-title">Nova naloga</h2>
+    <button class="modal-close" id="closeTaskModal" aria-label="Zapri">
+      <svg><use href="#ic-close"/></svg>
+    </button>
+  </div>
+  <form id="taskForm" class="modal-body" novalidate>
+    <input type="hidden" id="taskId">
+    <div class="form-group">
+      <label class="form-label" for="taskTitle">Naslov</label>
+      <input class="form-input" type="text" id="taskTitle" required placeholder="npr. Reševanje diferencialnih enačb">
+      <span class="field-error" id="taskTitleError"></span>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="taskDesc">Opis</label>
+      <textarea class="form-input" id="taskDesc" rows="2" placeholder="Opis naloge…"></textarea>
+    </div>
+    <div class="form-row three">
+      <div class="form-group">
+        <label class="form-label" for="taskDeadline">Rok</label>
+        <input class="form-input" type="datetime-local" id="taskDeadline">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="taskStatus">Status</label>
+        <div class="select-wrap full">
+          <select class="form-input" id="taskStatus">
+            <option value="planned" selected>Planirano</option>
+            <option value="in_progress">V teku</option>
+            <option value="done">Zaključeno</option>
+          </select>
+          <svg class="select-arrow" aria-hidden="true"><use href="#ic-chevron-right"/></svg>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="taskMinutes">Čas (min)</label>
+        <input class="form-input" type="number" id="taskMinutes" min="1" max="480" value="25">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="taskGoalId">Cilj</label>
+      <div class="select-wrap full">
+        <select class="form-input" id="taskGoalId">
+          <option value="">Brez cilja</option>
+        </select>
+        <svg class="select-arrow" aria-hidden="true"><use href="#ic-chevron-right"/></svg>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" id="cancelTaskBtn">Prekliči</button>
+      <button type="submit" class="btn btn-primary">Shrani</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Sprint modal -->
+<dialog class="modal-dialog" id="sprintModal" aria-labelledby="sprintModalTitle">
+  <div class="modal-header">
+    <h2 id="sprintModalTitle" class="modal-title">Nov sprint</h2>
+    <button class="modal-close" id="closeSprintModal" aria-label="Zapri">
+      <svg><use href="#ic-close"/></svg>
+    </button>
+  </div>
+  <form id="sprintForm" class="modal-body" novalidate>
+    <input type="hidden" id="sprintId">
+    <div class="form-row two">
+      <div class="form-group">
+        <label class="form-label" for="sprintStart">Začetek</label>
+        <input class="form-input" type="datetime-local" id="sprintStart" required>
+        <span class="field-error" id="sprintStartError"></span>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="sprintDuration">Trajanje (min)</label>
+        <input class="form-input" type="number" id="sprintDuration" min="1" max="480" value="25" required>
+      </div>
+    </div>
+    <div class="form-row two">
+      <div class="form-group">
+        <label class="form-label" for="sprintStatus">Status</label>
+        <div class="select-wrap full">
+          <select class="form-input" id="sprintStatus">
+            <option value="active" selected>Aktiven</option>
+            <option value="finished">Zaključen</option>
+          </select>
+          <svg class="select-arrow" aria-hidden="true"><use href="#ic-chevron-right"/></svg>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="sprintTaskId">Naloga</label>
+        <div class="select-wrap full">
+          <select class="form-input" id="sprintTaskId">
+            <option value="">Brez naloge</option>
+          </select>
+          <svg class="select-arrow" aria-hidden="true"><use href="#ic-chevron-right"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="sprintNotes">Opombe</label>
+      <textarea class="form-input" id="sprintNotes" rows="2" placeholder="Kratke opombe o sprintu…"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" id="cancelSprintBtn">Prekliči</button>
+      <button type="submit" class="btn btn-primary">Shrani</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Detail modal -->
+<dialog class="modal-dialog modal-wide" id="detailModal" aria-labelledby="detailModalTitle">
+  <div class="modal-header">
+    <h2 id="detailModalTitle" class="modal-title">Podrobnosti</h2>
+    <button class="modal-close" id="closeDetailModal" aria-label="Zapri">
+      <svg><use href="#ic-close"/></svg>
+    </button>
+  </div>
+  <div class="modal-body" id="detailModalBody"></div>
+</dialog>
+
+<!-- Confirm dialog (native <dialog> for accessibility) -->
+<dialog class="confirm-dialog" id="confirmModal" aria-labelledby="confirmModalTitle">
+  <div class="modal-header">
+    <h2 id="confirmModalTitle" class="modal-title">Potrdi brisanje</h2>
+  </div>
+  <div class="modal-body">
+    <p id="confirmMessage" class="confirm-msg"></p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-ghost" id="confirmCancelBtn">Prekliči</button>
+    <button class="btn btn-danger" id="confirmOkBtn">Izbriši</button>
+  </div>
+</dialog>
+
+<!-- Toast -->
+<div id="toastContainer" aria-live="polite" aria-atomic="false"></div>
+
+<script src="/pwa/db.js"></script>
+<script src="/pwa/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+{
+  "users": [
+    {
+      "id": "u-1",
+      "firstName": "Ana",
+      "lastName": "Novak",
+      "email": "ana.novak@example.com",
+      "role": "moderator",
+      "createdAt": "2026-04-24T07:17:07.940Z"
+    }
+  ],
+  "goals": [
+    {
+      "id": "goal-1777015027957-2",
+      "title": "Priprava na izpit iz matematike",
+      "description": "Predelaj poglavja 1-4 in reši stare naloge",
+      "deadline": "2026-04-10T20:00:00.000Z",
+      "priority": "high",
+      "status": "in_progress",
+      "userId": "u-1"
+    },
+    {
+      "id": "goal-1777015051733-8",
+      "title": "Izpit ST",
+      "description": "Izpit pri predmetu Spletne tehnologije.",
+      "deadline": "2026-05-31T07:17:00.000Z",
+      "priority": "high",
+      "status": "planned",
+      "userId": "u-1"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-1777015027957-3",
+      "title": "Reševanje diferencialnih enačb",
+      "description": "15 nalog z rešitvami",
+      "deadline": "2026-03-25T18:00:00.000Z",
+      "status": "done",
+      "estimatedMinutes": 90,
+      "goalId": "goal-1777015027957-2"
+    },
+    {
+      "id": "task-1777015091152-9",
+      "title": "Prvi slajd",
+      "description": "100 strani",
+      "deadline": "2026-04-27T07:18:00.000Z",
+      "status": "in_progress",
+      "estimatedMinutes": 60,
+      "goalId": "goal-1777015051733-8"
+    }
+  ],
+  "sprints": [
+    {
+      "id": "sprint-1777015027957-4",
+      "startTime": "2026-03-20T16:00:00.000Z",
+      "endTime": "2026-03-20T16:25:00.000Z",
+      "durationMinutes": 25,
+      "status": "active",
+      "notes": "Fokus na uvodne naloge",
+      "userId": "u-1",
+      "taskId": "task-1777015027957-3"
+    }
+  ],
+  "progress": [
+    {
+      "id": "progress-1777015027957-5",
+      "date": "2026-03-20",
+      "completedTasks": 2,
+      "sprintCount": 3,
+      "totalStudyMinutes": 75,
+      "completionPercentage": 45,
+      "userId": "u-1"
+    }
+  ],
+  "reminders": [
+    {
+      "id": "reminder-1777015027957-6",
+      "type": "task",
+      "scheduledFor": "2026-03-21T08:00:00.000Z",
+      "status": "pending",
+      "channel": "push",
+      "userId": "u-1",
+      "taskId": "task-1777015027957-3"
+    }
+  ],
+  "groups": [
+    {
+      "id": "g-1",
+      "name": "Algoritmi sprint",
+      "description": "Skupina za pripravo na kolokvij iz algoritmov",
+      "createdByUserId": "u-1",
+      "createdAt": "2026-04-24T07:17:07.940Z"
+    }
+  ],
+  "memberships": [
+    {
+      "id": "m-1",
+      "userId": "u-1",
+      "groupId": "g-1",
+      "role": "moderator",
+      "joinedAt": "2026-04-24T07:17:07.940Z"
+    }
+  ],
+  "challenges": [
+    {
+      "id": "challenge-1777015027957-7",
+      "title": "7 dni, 7 sprintov",
+      "description": "Vsak član izvede vsaj en sprint na dan",
+      "startDate": "2026-03-21",
+      "endDate": "2026-03-27",
+      "targetValue": 7,
+      "status": "planned",
+      "groupId": "g-1"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-// OAuth klijent - avtomatska pridobitev, skladiščenje in osvežavanje tokenov
+// OAuth client - avtomatska pridobitev, shranjevanje in osvežavanje tokenov
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import axios, {

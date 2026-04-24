@@ -1,8 +1,12 @@
-import { EntityMap, Goal, GroupChallenge, GroupMembership, Progress, Reminder, StudyGroup, StudySprint, Task, User } from "../types";
+import fs from "node:fs";
+import path from "node:path";
+import { EntityMap, Goal, GroupChallenge, Progress, Reminder, StudySprint, Task } from "../types";
 
 export type ResourceName = keyof EntityMap;
 
-export const store: { [K in ResourceName]: EntityMap[K][] } = {
+const STORE_FILE = path.resolve(process.cwd(), ".data", "store.json");
+
+const DEFAULT_STORE: { [K in ResourceName]: EntityMap[K][] } = {
   users: [
     {
       id: "u-1",
@@ -13,11 +17,11 @@ export const store: { [K in ResourceName]: EntityMap[K][] } = {
       createdAt: new Date().toISOString(),
     },
   ],
-  goals: [],
-  tasks: [],
-  sprints: [],
-  progress: [],
-  reminders: [],
+  goals:       [],
+  tasks:       [],
+  sprints:     [],
+  progress:    [],
+  reminders:   [],
   groups: [
     {
       id: "g-1",
@@ -38,6 +42,32 @@ export const store: { [K in ResourceName]: EntityMap[K][] } = {
   ],
   challenges: [],
 };
+
+function loadFromFile(): typeof DEFAULT_STORE {
+  try {
+    const raw    = fs.readFileSync(STORE_FILE, "utf-8");
+    const parsed = JSON.parse(raw) as Partial<typeof DEFAULT_STORE>;
+
+    // Merge: keep default structure, overlay persisted data
+    const merged = { ...DEFAULT_STORE } as typeof DEFAULT_STORE;
+    for (const key of Object.keys(merged) as ResourceName[]) {
+      if (Array.isArray(parsed[key])) {
+        (merged[key] as unknown[]) = parsed[key] as unknown[];
+      }
+    }
+    return merged;
+  } catch {
+    return structuredClone(DEFAULT_STORE);
+  }
+}
+
+export const store = loadFromFile();
+
+/** Fire-and-forget – writes the current store to .data/store.json */
+export function persistStore(): void {
+  fs.mkdirSync(path.dirname(STORE_FILE), { recursive: true });
+  fs.writeFileSync(STORE_FILE, JSON.stringify(store, null, 2) + "\n", "utf-8");
+}
 
 let counter = 1;
 
@@ -74,7 +104,7 @@ export function seedDemoData(): void {
   const demoSprint: StudySprint = {
     id: generateId("sprint"),
     startTime: "2026-03-20T16:00:00.000Z",
-    endTime: "2026-03-20T16:25:00.000Z",
+    endTime:   "2026-03-20T16:25:00.000Z",
     durationMinutes: 25,
     status: "active",
     notes: "Fokus na uvodne naloge",
@@ -107,7 +137,7 @@ export function seedDemoData(): void {
     title: "7 dni, 7 sprintov",
     description: "Vsak član izvede vsaj en sprint na dan",
     startDate: "2026-03-21",
-    endDate: "2026-03-27",
+    endDate:   "2026-03-27",
     targetValue: 7,
     status: "planned",
     groupId: "g-1",
@@ -119,4 +149,6 @@ export function seedDemoData(): void {
   store.progress.push(demoProgress);
   store.reminders.push(demoReminder);
   store.challenges.push(demoChallenge);
+
+  persistStore();
 }

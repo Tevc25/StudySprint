@@ -1,0 +1,51 @@
+{
+  "name": "StudySprint",
+  "short_name": "StudySprint",
+  "description": "Upravljaj učne cilje, naloge in sprinte – tvoj osebni učni pomočnik",
+  "start_url": "/pwa/",
+  "scope": "/pwa/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1a1a2e",
+  "theme_color": "#4361ee",
+  "lang": "sl",
+  "dir": "ltr",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/pwa/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icons/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nov učni cilj",
+      "short_name": "Nov cilj",
+      "description": "Dodaj nov učni cilj",
+      "url": "/pwa/?action=new-goal",
+      "icons": [{ "src": "/pwa/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Nova naloga",
+      "short_name": "Nova naloga",
+      "description": "Dodaj novo nalogo",
+      "url": "/pwa/?action=new-task",
+      "icons": [{ "src": "/pwa/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": []
+}

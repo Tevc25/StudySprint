@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { requireOAuth } from "../middleware/require-oauth";
-import { generateId, ResourceName, store } from "../data/store";
+import { generateId, persistStore, ResourceName, store } from "../data/store";
 
 export const apiRouter = Router();
 
@@ -30,6 +30,7 @@ function createHandler(resource: ResourceName, prefix: string) {
   return (req: Request, res: Response) => {
     const record = { id: generateId(prefix), ...req.body };
     (store[resource] as IdEntity[]).push(record as IdEntity);
+    persistStore();
     res.status(201).json({ success: true, data: record });
   };
 }
@@ -44,6 +45,7 @@ function putHandler(resource: ResourceName) {
     }
     const updated = { id: req.params.id, ...req.body };
     items[index] = updated;
+    persistStore();
     res.json({ success: true, data: updated });
   };
 }
@@ -57,6 +59,7 @@ function deleteHandler(resource: ResourceName) {
       return;
     }
     const [removed] = items.splice(index, 1);
+    persistStore();
     res.json({ success: true, data: removed });
   };
 }
