@@ -1,0 +1,47 @@
+{
+  "name": "StudySprint – Upravljanje učenja",
+  "short_name": "StudySprint",
+  "description": "Progresivna spletna aplikacija za organizacijo učenja, upravljanje ciljev in izvedbo study sprintov.",
+  "start_url": "/pwa/",
+  "scope": "/pwa/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#2D8CFF",
+  "lang": "sl",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/pwa/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa/icons/icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/pwa/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dodaj nalogo",
+      "short_name": "Nova naloga",
+      "description": "Odpri obrazec za novo nalogo",
+      "url": "/pwa/?entity=tasks&action=new",
+      "icons": [{ "src": "/pwa/icons/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Predmeti",
+      "short_name": "Predmeti",
+      "description": "Prikaži seznam predmetov",
+      "url": "/pwa/?entity=subjects",
+      "icons": [{ "src": "/pwa/icons/icon.svg", "sizes": "any" }]
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2D8CFF">
+  <meta name="description" content="StudySprint – Pametna aplikacija za organizacijo učenja">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="StudySprint">
+  <title>StudySprint</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="header-left">
+      <img src="icons/icon.svg" alt="StudySprint" class="logo">
+      <h1>StudySprint</h1>
+    </div>
+    <div class="header-right">
+      <span id="online-dot" class="online-dot" title="Stanje povezave"></span>
+      <button id="btn-todo" class="btn-icon" title="Todo seznam (Alt+T)">📝</button>
+      <button id="btn-push" class="btn-icon" title="Push obvestila">🔔</button>
+      <button id="btn-sync" class="btn-icon" title="Sinhronizacija (Alt+S)">🔄</button>
+    </div>
+  </header>
+
+  <!-- ── Status banner ──────────────────────────────────────────────────────── -->
+  <div id="notification-banner" class="banner hidden" role="status" aria-live="polite"></div>
+
+  <!-- ── Main content ───────────────────────────────────────────────────────── -->
+  <main id="app-main" class="app-main">
+    <div class="loading-state">Nalaganje…</div>
+  </main>
+
+  <!-- ── Bottom navigation ──────────────────────────────────────────────────── -->
+  <nav class="bottom-nav" id="bottom-nav" aria-label="Glavna navigacija">
+    <button class="nav-btn active" data-view="dashboard">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Domov</span>
+    </button>
+    <button class="nav-btn" data-view="tasks">
+      <span class="nav-icon">✅</span>
+      <span class="nav-label">Naloge</span>
+    </button>
+    <button class="nav-btn" data-view="sprints">
+      <span class="nav-icon">⚡</span>
+      <span class="nav-label">Sprinti</span>
+    </button>
+    <button class="nav-btn" data-view="progress">
+      <span class="nav-icon">📈</span>
+      <span class="nav-label">Napredek</span>
+    </button>
+    <button class="nav-btn" data-view="more">
+      <span class="nav-icon">☰</span>
+      <span class="nav-label">Več</span>
+    </button>
+  </nav>
+
+  <!-- ── Modal ──────────────────────────────────────────────────────────────── -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title"></h2>
+        <button id="btn-close-modal" class="btn-icon" aria-label="Zapri">✕</button>
+      </div>
+      <form id="entity-form" class="entity-form" novalidate></form>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel" class="btn btn-secondary">Prekliči</button>
+        <button type="submit" form="entity-form" class="btn btn-primary">Shrani</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Todo panel ─────────────────────────────────────────────────────────── -->
+  <aside id="todo-panel" class="todo-panel hidden" aria-label="Todo seznam">
+    <div class="todo-header">
+      <h2>📝 Todo</h2>
+      <span id="todo-count" class="todo-count"></span>
+      <button id="btn-todo-close" class="btn-icon" aria-label="Zapri">✕</button>
+    </div>
+    <ul id="todo-list" class="todo-list"></ul>
+    <div class="todo-footer">
+      <input
+        type="text"
+        id="todo-input"
+        placeholder="Nova naloga… (Enter)"
+        autocomplete="off"
+        maxlength="200"
+        aria-label="Nova todo naloga"
+      >
+      <button id="btn-todo-add" class="btn btn-primary" aria-label="Dodaj">+</button>
+    </div>
+  </aside>
+
+  <!-- ── Voice button ────────────────────────────────────────────────────────── -->
+  <button id="voice-toggle-btn" class="voice-btn" title="Glasovni ukazi (Alt+V)" aria-label="Glasovni ukazi">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22" height="22" aria-hidden="true">
+      <path d="M12 1a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V5a4 4 0 0 1 4-4zm-2 14.93A7.001 7.001 0 0 0 19 11h-2a5 5 0 0 1-10 0H5a7.001 7.001 0 0 0 6 5.93V19H8v2h8v-2h-3v-2.07z"/>
+    </svg>
+  </button>
+
+  <!-- ── Voice listening indicator ────────────────────────────────────────────── -->
+  <div id="voice-indicator" class="voice-indicator hidden" role="status" aria-live="polite">
+    🎙️ Poslušam…
+  </div>
+
+  <!-- ── Voice command toast ──────────────────────────────────────────────────── -->
+  <div id="voice-toast" class="voice-toast hidden" role="status" aria-live="polite"></div>
+
+  <script src="voice.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
