@@ -4,13 +4,17 @@ import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import apiRouter from './src/api/index';
 import { swaggerSpec } from './src/config/swagger';
+import cors from 'cors';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
+app.use(cors({ origin: '*' }));
+
 // --- Middleware ---
 app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'src/public')));
+app.use(express.static(path.join(__dirname, 'pwa')));
 
 // --- Dokumentacijski endpointi ---
 app.get('/funkcionalnosti-streznika', (_req: Request, res: Response) => {
@@ -81,7 +85,7 @@ Konfiguracija (.env):
   FIREBASE_PROJECT_ID=...
   FIREBASE_PRIVATE_KEY=...
   FIREBASE_CLIENT_EMAIL=...
-`
+`,
   );
 });
 

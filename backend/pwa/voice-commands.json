@@ -1,0 +1,7 @@
+{
+  "odpri cilje": "goals",
+  "odpri naloge": "tasks",
+  "dodaj cilj": "openGoalModal",
+  "dodaj nalogo": "openTaskModal",
+  "odjava": "logout"
+}

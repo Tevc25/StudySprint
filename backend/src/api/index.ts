@@ -8,6 +8,7 @@ import groupsRouter from './groups';
 import challengesRouter from './challenges';
 import notificationsRouter from './notifications';
 import progressRouter from './progress';
+import pushRouter from './push';
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use('/groups', requireAuth, groupsRouter);
 router.use('/challenges', requireAuth, challengesRouter);
 router.use('/notifications', requireAuth, notificationsRouter);
 router.use('/progress', requireAuth, progressRouter);
+router.use('/push', pushRouter);
 
 export default router;
